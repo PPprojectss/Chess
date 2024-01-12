@@ -44,8 +44,14 @@ void ManageConnection(Network* network)
         std::cout << strtol(seglist[0].c_str(), NULL, 0) << " " << strtol(seglist[1].c_str(), NULL, 0) << " " << strtol(seglist[2].c_str(), NULL, 0) << std::endl;
 
         server->piece = strtol(seglist[0].c_str(), NULL, 0);
-        server->x = strtol(seglist[1].c_str(), NULL, 0);
-        server->y = strtol(seglist[2].c_str(), NULL, 0);
+        float xx, yy;
+        xx = strtol(seglist[1].c_str(), NULL, 0);
+        yy = strtol(seglist[2].c_str(), NULL, 0);
+
+        yy = 660 - yy;
+
+        server->x = xx;
+        server->y = yy;
         
         server->turn = true;
         server->turnEnded = true;
