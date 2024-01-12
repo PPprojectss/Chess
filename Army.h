@@ -13,7 +13,8 @@ class Army
 		~Army() = default;
 
 		void draw(sf::RenderWindow* window);
-		void game(sf::RenderWindow* window, bool turn);
+		std::string game(sf::RenderWindow* window);
+		void updatePiece(int id, sf::Vector2f pos);
 
 	private:
 

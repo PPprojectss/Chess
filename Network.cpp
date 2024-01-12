@@ -41,9 +41,9 @@ void Network::sendMessage(std::string msg)
 
 std::string Network::receiveMassage()
 {
-    char text[1024];
+    char text[512];
     //int rc = read(m_con, buf, sizeof(buf));
-    int rc = recv(m_server, text, sizeof(buf), 0);
+    int rc = recv(m_server, text, buf, 0);
 
     return std::string(text);
 }

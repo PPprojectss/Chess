@@ -87,44 +87,54 @@ void Army::draw(sf::RenderWindow* window)
 
 }
 
-void Army::game(sf::RenderWindow* window, bool turn)
+std::string Army::game(sf::RenderWindow* window)
 {
-	if (turn)
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		sf::Vector2i position = sf::Mouse::getPosition(*window);
+
+		if (m_selected == 16)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				if (m_piece[i].getShape()->getGlobalBounds().contains(sf::Vector2f(position.x, position.y)))
+				{
+					m_selected = i;
+					std::cout << i << std::endl;
+					m_mousePressed = true;
+					break;
+				}
+			}
+		}
+
+		if (m_selected != 16)
 		{
 			sf::Vector2i position = sf::Mouse::getPosition(*window);
 
-			if (m_selected == 16)
-			{
-				for (int i = 0; i < 16; i++)
-				{
-					if (m_piece[i].getShape()->getGlobalBounds().contains(sf::Vector2f(position.x, position.y)))
-					{
-						m_selected = i;
-						std::cout << i << std::endl;
-						m_mousePressed = true;
-						break;
-					}
-				}
-			}
-
-			if (m_selected != 16)
-			{
-				sf::Vector2i position = sf::Mouse::getPosition(*window);
-
-				m_piece[m_selected].getShape()->setPosition(sf::Vector2f(position.x, position.y));
-			}
+			m_piece[m_selected].getShape()->setPosition(sf::Vector2f(position.x, position.y));
 		}
-		else if (m_mousePressed == true)
-		{
-			std::cout << "Koniec" << std::endl;
-			m_mousePressed = false;
-			; // info do serwa ze koniec ruchu
-		}
-		else
-			m_selected = 16;
-
-		
 	}
+	else if (m_mousePressed == true)
+	{
+		std::cout << "Koniec" << std::endl;
+		m_mousePressed = false;
+		std::string mes = std::to_string(m_selected);
+		mes.append(" ");
+		mes.append(std::to_string(m_piece[m_selected].getShape()->getPosition().x));
+		mes.append(" ");
+		mes.append(std::to_string(m_piece[m_selected].getShape()->getPosition().y));
+
+		m_selected = 16;
+
+		return mes;
+	}
+	else
+		m_selected = 16;
+
+	return "";
+}
+
+void Army::updatePiece(int id, sf::Vector2f pos)
+{
+	m_pieceE[id].getShape()->setPosition(pos);
 }
