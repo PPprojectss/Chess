@@ -14,8 +14,10 @@ void Piece::draw(sf::RenderWindow* window)
 
 void Piece::loadTexture(std::string name, sf::Vector2f pos)
 {
-	m_type = name;
+	m_name = name;
 	m_dead = false;
+	m_type = name[0];
+	m_pos = pos;
 
 	std::string path;
 	path.append("Assets/");
@@ -37,4 +39,42 @@ void Piece::loadTexture(std::string name, sf::Vector2f pos)
 sf::RectangleShape* Piece::getShape()
 {
 	return &m_piece;
+}
+
+char Piece::getType()
+{
+	return m_type;
+}
+
+bool Piece::firstMove()
+{
+	return m_firstMove;
+}
+
+bool Piece::dead()
+{
+	return m_dead;
+}
+
+void Piece::die()
+{
+	setPos(sf::Vector2f(-200, -200));
+	m_dead = true;
+}
+
+void Piece::setPos(sf::Vector2f pos)
+{
+	m_pos = pos;
+	m_firstMove = false;
+	m_piece.setPosition(pos);
+}
+
+sf::Vector2f Piece::getPos()
+{
+	return m_pos;
+}
+
+void Piece::reset()
+{
+	m_piece.setPosition(m_pos);
 }

@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-#define buf 512
+#define buf 128
 
 class Network
 {

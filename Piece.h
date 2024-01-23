@@ -12,10 +12,22 @@ class Piece
 		void loadTexture(std::string name, sf::Vector2f pos);
 		sf::RectangleShape* getShape();
 
+		char getType();
+		bool firstMove();
+		bool dead();
+		void die();
+		void setPos(sf::Vector2f pos);
+		sf::Vector2f getPos();
+		void reset();
+
 	private:
 		sf::RectangleShape m_piece;
 		sf::Texture m_text;
-		bool m_dead;
-		std::string m_type;
+		bool m_dead = false;
+		bool m_firstMove = true;
+		std::string m_name;
+		char m_type;
+
+		sf::Vector2f m_pos;
 };
 

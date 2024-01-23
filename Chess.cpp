@@ -31,6 +31,12 @@ void ManageConnection(Network* network)
 
         std::string foo = network->receiveMassage();
 
+        if (foo == "END")
+        {
+            server->endGame = true;
+            return;
+        }
+
         std::stringstream test(foo);
         std::string segment;
         std::vector<std::string> seglist;
@@ -49,6 +55,7 @@ void ManageConnection(Network* network)
         yy = strtol(seglist[2].c_str(), NULL, 0);
 
         yy = 660 - yy;
+        xx = 660 - xx;
 
         server->x = xx;
         server->y = yy;
@@ -67,6 +74,7 @@ int main()
 
     short status = 0;
 
+    Army* army = nullptr;
     server = new Server;
 
     server->turn = false;
@@ -81,41 +89,66 @@ int main()
     //std::cout << "Podaj port: ";
     //std::cin >> port;
 
-    std::cout << "Co chesz zrobic?" << std::endl;
-    std::cout << "(1 - utworz pokoj)" << std::endl;
-    std::cout << "(2 - dolacz do pokoju)" << std::endl;
-    std::cin >> choice;
-
-    if(choice[0] == '1')
-        network.sendMessage("C");
-    if (choice[0] == '2')
-        network.sendMessage("J 0");
-
-    std::string tmp = network.receiveMassage();
-
-    std::cout << tmp << std::endl;
-    Army* army = nullptr;
-
-    if (tmp[6] == 'W')
+    do
     {
-        army = new Army(true);
-        status = 1;
-        std::cout << tmp[6] << "  Grasz jako biale" << std::endl;
-        server->turn = true;
-    }
-    else if(tmp[6] == 'B')
-    {
-        army = new Army(false);
-        status = 2;
-        std::cout << tmp[6] << "  Grasz jako czarne" << std::endl;
-    }
+        std::cout << "Co chesz zrobic?" << std::endl;
+        std::cout << "(1 - utworz pokoj)" << std::endl;
+        std::cout << "(2 - dolacz do pokoju)" << std::endl;
+        std::cin >> choice;
+
+        if (choice[0] == '1')
+        {
+            network.sendMessage("C");
+
+            std::string tmp = network.receiveMassage();
+
+            std::cout << "Created room: " << tmp << std::endl;
+        }
+        if (choice[0] == '2')
+        {
+            std::string roomChoice;
+            std::string mess;
+            mess.append("J ");
+            std::cout << "Enter room to join: ";
+            std::cin >> roomChoice;
+            mess.append(roomChoice);
+
+            network.sendMessage(mess);
+        }
+
+
+
+        std::string tmp = network.receiveMassage();
+
+        std::cout << tmp << std::endl;
+
+        if (tmp[0] == 'S')
+        {
+            if (tmp[6] == 'W')
+            {
+                army = new Army(true);
+                status = 1;
+                std::cout << tmp[6] << "  Grasz jako biale" << std::endl;
+                server->turn = true;
+            }
+            else if (tmp[6] == 'B')
+            {
+                army = new Army(false);
+                status = 2;
+                std::cout << tmp[6] << "  Grasz jako czarne" << std::endl;
+            }
+        }
+
+    } while (status == 0);
 
     std::thread worker(ManageConnection, &network);
 
-    sf::RenderWindow window(sf::VideoMode(1024, 800), "Chess");
+    sf::RenderWindow window(sf::VideoMode(660, 660), "Chess");
 
     while (window.isOpen())
     {
+        
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -123,10 +156,14 @@ int main()
                 window.close();
         }
 
+        if (server->endGame == true)
+        {
+            return -1;
+        }
+
         if (server->turnEnded == true and server->turn == true)
         {
             army->updatePiece(server->piece, sf::Vector2f(server->x, server->y));
-            std::cout << "Dane odebrane i koniec tury" << std::endl;
             server->turnEnded = false;
         }
 
@@ -144,8 +181,15 @@ int main()
 
         window.clear();
         army->draw(&window);
+        army->drawPossibleMoves(&window);
         window.display();
     }
+
+    server->endGame = true;
+    network.~Network();
+
+    std::cin;
+    std::cin;
 
     return 0;
 }

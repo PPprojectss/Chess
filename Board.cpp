@@ -18,7 +18,10 @@ Board::Board()
 				m_shape[j][i].setFillColor(sf::Color(200, 200, 200));
 			else
 				m_shape[j][i].setFillColor(sf::Color(60, 60, 60));
+
+			std::cout << m_shape[j][i].getPosition().x << " " << m_shape[j][i].getPosition().y << " ";
 		}
+		std::cout << std::endl;
 	}
 }
 
