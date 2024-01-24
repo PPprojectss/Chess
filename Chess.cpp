@@ -80,14 +80,15 @@ int main()
     server->turn = false;
     server->turnEnded = false;
 
-    Network network;
-    network.createConnection("127.0.0.1", 4109);
 
-    //std::cout << "Witaj w grze Szachy !!!!" << std::endl;
-    //std::cout << "Podaj adres IP: ";
-    //std::cin >> ip;
-    //std::cout << "Podaj port: ";
-    //std::cin >> port;
+    std::cout << "Witaj w grze Szachy !!!!" << std::endl;
+    std::cout << "Podaj adres IP: ";
+    std::cin >> ip;
+    std::cout << "Podaj port: ";
+    std::cin >> port;
+
+    Network network;
+    network.createConnection(ip, port);
 
     do
     {
