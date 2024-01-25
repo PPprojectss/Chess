@@ -36,14 +36,44 @@ void Network::createConnection(std::string addres, int port)
 void Network::sendMessage(std::string msg)
 {
     //write(m_con, tmp, sizeof(tmp));
-    send(m_server, msg.c_str(), sizeof(msg), 0);
+    std::string data = msg;
+    msg.append("\n");
+    send(m_server, msg.c_str(), buf, 0);
 }
 
 std::string Network::receiveMassage()
 {
-    char text[buf];
-    //int rc = read(m_con, buf, sizeof(buf));
-    int rc = recv(m_server, text, buf, 0);
+    std::string data = "";
+    std::string garbage = "";
 
-    return std::string(text);
+    //int rc = read(m_con, buf, sizeof(buf));
+
+    bool EOM = false; // end of messege
+
+    while(!EOM)
+    {
+        char tmp[buf];
+        int rc = recv(m_server, tmp, buf, 0);
+
+        for (int i = 0; i < rc; i++)
+        {
+            if (tmp[i] == '\n')
+            {
+                EOM = true;
+
+                for (int j = i; j <= buf; j++)
+                    garbage += tmp[j];
+
+                break;
+            }
+            data += tmp[i];
+        }
+
+    }
+
+    
+
+    std::cout << "Received: " << data << std::endl;
+
+    return data;
 }

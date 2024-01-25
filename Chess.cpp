@@ -29,15 +29,15 @@ void ManageConnection(Network* network)
         while (server->turn == true);
         std::cout << "Czekam na dane" << std::endl;
 
-        std::string foo = network->receiveMassage();
+        std::string data = network->receiveMassage();
 
-        if (foo == "END")
+        if (data == "END")
         {
             server->endGame = true;
             return;
         }
 
-        std::stringstream test(foo);
+        std::stringstream test(data);
         std::string segment;
         std::vector<std::string> seglist;
 
@@ -46,8 +46,8 @@ void ManageConnection(Network* network)
             seglist.push_back(segment);
         }
 
-        std::cout << seglist[0] << " " << seglist[1] << " " << seglist[2] << std::endl;
-        std::cout << strtol(seglist[0].c_str(), NULL, 0) << " " << strtol(seglist[1].c_str(), NULL, 0) << " " << strtol(seglist[2].c_str(), NULL, 0) << std::endl;
+        //std::cout << seglist[0] << " " << seglist[1] << " " << seglist[2] << std::endl;
+        //std::cout << strtol(seglist[0].c_str(), NULL, 0) << " " << strtol(seglist[1].c_str(), NULL, 0) << " " << strtol(seglist[2].c_str(), NULL, 0) << std::endl;
 
         server->piece = strtol(seglist[0].c_str(), NULL, 0);
         float xx, yy;
