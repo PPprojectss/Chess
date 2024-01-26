@@ -9,7 +9,7 @@
 #include "Army.h"
 #include "Network.h"
 
-struct Server
+struct Server // dane dzielone przez wątek oraz główny proces
 {
     bool turn;
     bool turnEnded;
@@ -21,7 +21,7 @@ struct Server
 
 Server* server;
 
-void ManageConnection(Network* network)
+void ManageConnection(Network* network) //wątek do zarządzania komunikacją z serwerm
 {
     while(server->endGame != true)
     { 
@@ -45,9 +45,6 @@ void ManageConnection(Network* network)
         {
             seglist.push_back(segment);
         }
-
-        //std::cout << seglist[0] << " " << seglist[1] << " " << seglist[2] << std::endl;
-        //std::cout << strtol(seglist[0].c_str(), NULL, 0) << " " << strtol(seglist[1].c_str(), NULL, 0) << " " << strtol(seglist[2].c_str(), NULL, 0) << std::endl;
 
         server->piece = strtol(seglist[0].c_str(), NULL, 0);
         float xx, yy;
@@ -74,7 +71,7 @@ int main()
 
     short status = 0;
 
-    Army* army = nullptr;
+    Army* army = nullptr; //klasa przechowująca pionki gracza jak i przeciwnika
     server = new Server;
 
     server->turn = false;
@@ -87,7 +84,7 @@ int main()
     std::cout << "Podaj port: ";
     std::cin >> port;
 
-    Network network;
+    Network network; // klasa odpowiedzialna za komunikację z serwerem
     network.createConnection(ip, port);
 
     do
@@ -142,9 +139,9 @@ int main()
 
     } while (status == 0);
 
-    std::thread worker(ManageConnection, &network);
+    std::thread worker(ManageConnection, &network); // tworzenie wątku do obsługi komunikacji
 
-    sf::RenderWindow window(sf::VideoMode(660, 660), "Chess");
+    sf::RenderWindow window(sf::VideoMode(660, 660), "Chess"); // onko aplikacji
 
     while (window.isOpen())
     {
@@ -157,18 +154,18 @@ int main()
                 window.close();
         }
 
-        if (server->endGame == true)
+        if (server->endGame == true) // stan w którym gra się zakończyła
         {
             return -1;
         }
 
-        if (server->turnEnded == true and server->turn == true)
+        if (server->turnEnded == true and server->turn == true) // stan w którym przeciwnik wykonał swój ruch i teraz nasza kolej
         {
             army->updatePiece(server->piece, sf::Vector2f(server->x, server->y));
             server->turnEnded = false;
         }
 
-        if(server->turn == true)
+        if(server->turn == true) // stan w którym gracz decyduje o swoim ruchu
         {
             std::string tmp = army->game(&window);
 
@@ -180,6 +177,7 @@ int main()
             }
         }
 
+        // obsługa renderu
         window.clear();
         army->draw(&window);
         army->drawPossibleMoves(&window);

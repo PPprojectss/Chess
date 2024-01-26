@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-#define buf 64
+#define buf 64 //z góry koreœlony bufor przyjmowanych danych
 
 class Network
 {

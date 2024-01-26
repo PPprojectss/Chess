@@ -136,14 +136,12 @@
     <ClCompile Include="Army.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Chess.cpp" />
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Piece.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Army.h" />
     <ClInclude Include="Board.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Piece.h" />
   </ItemGroup>
